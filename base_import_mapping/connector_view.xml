@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_backend_base_import_tree" model="ir.ui.view">
+          <field name="model">backend.base.import</field>
+          <field name="arch" type="xml">
+            <tree string="Base Import Backends">
+              <field name="name"/>
+              <field name="version"/>
+              <field name="company_id"/>
+            </tree>
+          </field>
+        </record>
+
+        <record id="action_backend_base_import" model="ir.actions.act_window">
+          <field name="name">Base Import Backends</field>
+          <field name="res_model">backend.base.import</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="view_id" ref="view_backend_base_import_tree"/>
+        </record>
+        <menuitem id="menu_backend_base_import_root"
+                  parent="connector.menu_connector_root"
+                  name="Base Import Backend"
+                  sequence="10"
+                  groups="connector.group_connector_manager"/>
+
+        <menuitem id="menu_backend_base_import_backend"
+                  name="Backends"
+                  parent="menu_backend_base_import_root"
+                  action="action_backend_base_import"/>
+    </data>
+</openerp>
