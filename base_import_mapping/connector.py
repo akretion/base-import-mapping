@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -21,11 +21,16 @@
 
 from openerp import models, fields, api
 from openerp.addons.connector import backend
+from openerp.addons.connector.connector import install_in_connector
 from openerp.addons.connector.exception import NoConnectorUnitError
 from openerp.addons.connector.connector import ConnectorEnvironment
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.unit.mapper import ImportMapper
 from openerp.addons.base_import.models import FIELDS_RECURSION_LIMIT
+import os
+
+
+MODULE_NAME = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
 
 
 class ir_fields_converter(models.Model):
@@ -144,12 +149,22 @@ _add_fake_fields_original = models.BaseModel._add_fake_fields
 
 @api.model
 def _add_fake_fields(self, fields):
-    fields = _add_fake_fields_original(self, fields)
-    mapper = BackendBaseImport.get_mapper(self.env, self._name)
-    if mapper and mapper._map_fields:
-        from openerp.fields import Char
-        for field, label in mapper._map_fields:
-            fields[field] = Char(field)
+    """ If a model named '{{module_name}}.installed' is defined in db
+        then it means than this module is installed
+        and this code can be executed
+    """
+    if ('%s.installed' % MODULE_NAME.replace('_', '.') in
+            self.env.registry.models.keys()):
+        fields = _add_fake_fields_original(self, fields)
+        mapper = BackendBaseImport.get_mapper(self.env, self._name)
+        if mapper and mapper._map_fields:
+            from openerp.fields import Char
+            for field, label in mapper._map_fields:
+                fields[field] = Char(field)
     return fields
+
+
+install_in_connector()
+
 
 models.BaseModel._add_fake_fields = _add_fake_fields
