@@ -56,16 +56,52 @@ class ir_fields_converter(models.Model):
                     record_to_map[field] = value
 
             converted = fn(record_to_convert, log)
-
-            if record_to_map:
-                mapper = BackendBaseImport.get_mapper(self.env, model._name)
-                if mapper:
-                    map_record = mapper.map_record(record)
-                    converted.update(map_record.values())
-
+            converted.update(record_to_map)
             return converted
 
         return fn_with_mapping
+
+
+class IrModelData(models.Model):
+    _inherit = 'ir.model.data'
+
+    @api.model
+    def _map_fields(self, model, vals):
+
+        mapper = BackendBaseImport.get_mapper(self.env, model)
+        if mapper:
+            vals.update(mapper.map_record(vals).values())
+            for map_field, label in mapper._map_fields:
+                del vals[map_field]
+
+        res = vals
+        model_obj = self.env[model]
+        for field_name, value in vals.items():
+            if field_name in model_obj._fields:
+                field = model_obj._fields[field_name]
+                if field.type in ('one2many', 'many2many'):
+                    many_res = []
+                    for many_val in value:
+                        many_val = list(many_val)
+                        if len(many_val) == 3 and \
+                                isinstance(many_val[2], dict):
+                            many_val[2] = self._map_fields(
+                                field.comodel_name, many_val[2])
+                        many_res.append(tuple(many_val))
+                    res[field_name] = many_res
+
+        return res
+
+    @api.model
+    def _update(self, model, module, values, xml_id=False, store=True,
+                noupdate=False, mode='init', res_id=False, context=None):
+        context = context or {}
+        values = self._map_fields(model, values)
+        return super(IrModelData, self)._update(model, module, values,
+                                                xml_id=xml_id, store=store,
+                                                noupdate=noupdate, mode=mode,
+                                                res_id=res_id, context=context
+                                                )
 
 
 class ir_import(models.Model):
