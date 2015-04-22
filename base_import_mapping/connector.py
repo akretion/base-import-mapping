@@ -80,6 +80,10 @@ class IrModelData(models.Model):
             if field_name in model_obj._fields:
                 field = model_obj._fields[field_name]
                 if field.type in ('one2many', 'many2many'):
+
+                    if not isinstance(value, list):
+                        continue
+
                     many_res = []
                     for many_val in value:
                         many_val = list(many_val)
