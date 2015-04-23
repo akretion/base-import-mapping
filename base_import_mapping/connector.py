@@ -70,7 +70,8 @@ class IrModelData(models.Model):
         if mapper:
             vals.update(mapper.map_record(vals).values())
             for map_field, label in mapper._map_fields:
-                del vals[map_field]
+                if map_field in vals:
+                    del vals[map_field]
 
         res = vals
         model_obj = self.env[model]
