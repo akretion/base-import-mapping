@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+
+<record id="main_backend_base_import" model="backend.base.import">
+    <field name="name">Main</field>
+    <field name="version">1.0</field>
+</record>
+
+    </data>
+</openerp>

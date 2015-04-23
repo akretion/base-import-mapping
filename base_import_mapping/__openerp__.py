@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -31,6 +31,7 @@
     'demo': [],
     'website': 'https://www.akretion.com',
     'data': [
+        'data/misc_data.xml',
         'connector_view.xml',
     ],
     'installable': True,
