@@ -194,7 +194,7 @@ def _add_fake_fields(self, fields):
         then it means than this module is installed
         and this code can be executed
     """
-    if ('%s.installed' % MODULE_NAME.replace('_', '.') in
+    if ('%s.installed' % MODULE_NAME in
             self.env.registry.models.keys()):
         fields = _add_fake_fields_original(self, fields)
         mapper = BackendBaseImport.get_mapper(self.env, self._name)
