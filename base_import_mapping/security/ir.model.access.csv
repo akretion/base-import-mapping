@@ -1,2 +1,3 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_backend_base_import_manager","Backend base import","base_import_mapping.model_backend_base_import","connector.group_connector_manager",1,1,1,1
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_backend_base_import_manager,Backend base import manager,base_import_mapping.model_backend_base_import,connector.group_connector_manager,1,1,1,1
+access_backend_base_import_user,Backend base import user,base_import_mapping.model_backend_base_import,base.group_user,1,0,0,0

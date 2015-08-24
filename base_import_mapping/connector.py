@@ -108,7 +108,7 @@ class IrModelData(models.Model):
                                                 )
 
 
-class ir_import(models.Model):
+class ir_import(models.TransientModel):
     _inherit = 'base_import.import'
 
     @api.model
